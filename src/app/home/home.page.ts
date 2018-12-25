@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -9,22 +9,20 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 })
 export class HomePage {
 	url: any;
-	constructor(private sanitize: DomSanitizer, private localNotifications: LocalNotifications){
-		this.url = sanitize.bypassSecurityTrustResourceUrl('http://tdvd.theappnow.net');
-		this.localNotifications.schedule([{
-		   id: 2,
-		   title: 'Local ILocalNotification Example',
-		   text: 'Multi ILocalNotification 2',
-		   icon: 'http://example.com/icon.png'
-		}]);
+	constructor(private sanitize: DomSanitizer, private uniqueDeviceID: UniqueDeviceID){
+		this.uniqueDeviceID.get().then((uuid: any)=>{
+          this.url = sanitize.bypassSecurityTrustResourceUrl('http://tdvd.theappnow.net/Account/Login?IDApp='+uuid);
+        }).catch((error: any)=>{
+          
+        });
 	}
 
 	ngAfterViewInit() {
-	    var iframe:HTMLIFrameElement = <HTMLIFrameElement>document.getElementById('myFrame');
-	    var iWindow = (<HTMLIFrameElement>iframe).contentWindow.document;
+	    //var iframe:HTMLIFrameElement = <HTMLIFrameElement>document.getElementById('myFrame');
+	    //var iWindow = (<HTMLIFrameElement>iframe).contentWindow.document;
 	    // iWindow.open('http://tdvd.theappnow.net/');
 	    
 	    // window.open('http://tdvd.theappnow.net/', '_system', 'location=yes'); return false;
-	    iWindow.body.style.zoom ="50%";
+	    //iWindow.body.style.zoom ="50%";
 	}
 }
